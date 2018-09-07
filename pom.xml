@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>3.19</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.amadeus.plugins</groupId>
+    <artifactId>pipeline-unbreakable-build-plugin</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>hpi</packaging>
+
+    <name>Swb Pipeline Unbreakable Build Plugin</name>
+
+    <organization>
+        <name>Amadeus</name>
+        <url>https://amadeus.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Olivier Beltrando</name>
+            <email>olivier.beltrando@amadeus.com</email>
+            <url>https://github.com/olivierbeltrandoamadeus</url>
+            <roles>
+                <role>main developer</role>
+            </roles>
+        </developer>
+
+        <developer>
+            <name>Arnaud Contes</name>
+            <email>arnaud.contes@amadeus.com</email>
+            <url>https://github.com/acontes1a</url>
+            <roles>
+                <role>architect</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Matthieu Émile</name>
+            <email>matthieu.emile@amadeus.com</email>
+            <url>https://github.com/maemile</url>
+        </contributor>
+        <contributor>
+            <name>Vivien Fricadel</name>
+            <email>vivien.fricadel@amadeus.com</email>
+        </contributor>
+        <contributor>
+            <name>Thomas Weißschuh</name>
+            <email>thomas.weissschuh@de.amadeus.com</email>
+            <url>https://github.com/t-8ch</url>
+            <roles>
+                <role>main reviewer</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+
+    <properties>
+        <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
+        <jenkins.version>2.136</jenkins.version>
+        <java.level>8</java.level>
+        <workflow.aggregator.version>2.5</workflow.aggregator.version>
+        <httpclient.version>4.5.5-2.1</httpclient.version>
+        <mockito.all.version>1.10.19</mockito.all.version>
+        <artifactory-maven-plugin.version>2.6.1</artifactory-maven-plugin.version>
+        <git-plugin.version>3.5.0</git-plugin.version>
+        <no-test-jar>false</no-test-jar>
+    </properties>
+
+    <dependencies>
+        <!-- needed as we depend on the DISPLAYED_URL env var -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>display-url-api</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+        <!-- mandatory -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-aggregator</artifactId>
+            <version>${workflow.aggregator.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jenkins-ci.plugins/apache-httpcomponents-client-4-api -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>apache-httpcomponents-client-4-api</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <!-- Nice assertions for the testing -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--Fix deps issue before importing the nice http mocking..... -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.5.v20170502</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.4.5.v20170502</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>5.0.4</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- end deps issues-->
+
+        <!-- Mocking HTTP nicely -->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.18.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.21.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- IMPORTANT TO HAVE THE GIT SAMPLE REPO -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>git</artifactId>
+            <version>${git-plugin.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- AND IMPORTANT TO GET THE DEPS OF THE GIT SAMPLE REPO-->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>scm-api</artifactId>
+            <version>2.2.0</version>
+            <classifier>tests</classifier>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>event-announcer</artifactId>
+            <version>1.0.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>annotation-indexer</artifactId>
+            <version>1.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>junit</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>git</artifactId>
+            <version>${git-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Artifactory Deployment Configuration -->
+            <plugin>
+                <groupId>org.jfrog.buildinfo</groupId>
+                <artifactId>artifactory-maven-plugin</artifactId>
+                <version>${artifactory-maven-plugin.version}</version>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                        <configuration>
+                            <publisher>
+                                <contextUrl>{{ARTIFACTORY_URL}}</contextUrl>
+                                <username>{{AR_USERNAME}}</username>
+                                <password>{{AR_PASSWORD}}</password>
+                                <repoKey>maven-release</repoKey>
+                                <snapshotRepoKey>maven-snapshot</snapshotRepoKey>
+                            </publisher>
+                            <artifactory>
+                                <includeEnvVars>true</includeEnvVars>
+                                <envVarsExcludePatterns>AR_PASSWORD</envVarsExcludePatterns>
+                                <timeoutSec>60</timeoutSec>
+                                <propertiesFile>publish.properties</propertiesFile>
+                            </artifactory>
+                            <buildInfo>
+                                <buildName>${project.groupId}.${project.artifactId}</buildName>
+                                <buildNumber>${project.version}</buildNumber>
+                                <buildUrl>{{BUILD_URL}}</buildUrl>
+                            </buildInfo>
+                            <licenses>
+                                <autoDiscover>true</autoDiscover>
+                                <includePublishedArtifacts>false</includePublishedArtifacts>
+                                <runChecks>true</runChecks>
+                                <scopes>compile,runtime</scopes>
+                            </licenses>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <repositories>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
