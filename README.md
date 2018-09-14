@@ -3,6 +3,7 @@
 This plugin is a part of the plugin suite that brings the unbreakable build/branch feature to your Bitbucket project.
 
 [![Build Status](https://travis-ci.org/AmadeusITGroup/unbreakable-branches-jenkins.svg?branch=master)](https://travis-ci.org/AmadeusITGroup/unbreakable-branches-jenkins)
+[![codecov](https://codecov.io/gh/AmadeusITGroup/unbreakable-branches-jenkins/branch/master/graph/badge.svg)](https://codecov.io/gh/AmadeusITGroup/unbreakable-branches-jenkins)
 
 ### The problem the Unbreakable build/branch tries to solve:
 
