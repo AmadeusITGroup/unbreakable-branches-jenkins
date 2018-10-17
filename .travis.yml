@@ -3,6 +3,17 @@ sudo: false # faster builds
 cache:
   directories:
   - $HOME/.m2
+
+before_install:
+  # override the settings.xml from travis (seen on their blog)
+  # to use only central and jenkins repos
+  - cp .travis.settings.xml $HOME/.m2/settings.xml
+#   # uncomment below when investigating
+#   # maven behaviour
+#   - mvn help:effective-pom
+#   - mvn help:effective-settings
+
+
 # code coverage
 after_success:
   - bash <(curl -s https://codecov.io/bash)
