@@ -5,9 +5,8 @@ cache:
   - $HOME/.m2
 
 before_install:
-  # override the settings.xml from travis (seen on their blog)
-  # to use only central and jenkins repos
-  - cp .travis.settings.xml $HOME/.m2/settings.xml
+  # ignore travis settings.xml
+  - rm -f $HOME/.m2/settings.xml
 #   # uncomment below when investigating
 #   # maven behaviour
 #   - mvn help:effective-pom
