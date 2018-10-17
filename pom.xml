@@ -10,12 +10,12 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.amadeus.plugins</groupId>
-    <artifactId>pipeline-unbreakable-build-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <groupId>com.amadeus.jenkins.plugins</groupId>
+    <artifactId>unbreakable-branches-jenkins</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <name>Swb Pipeline Unbreakable Build Plugin</name>
+    <name>Unbreakable Branches Jenkins Plugin</name>
 
     <organization>
         <name>Amadeus</name>
@@ -65,7 +65,7 @@
 
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.136</jenkins.version>
+        <jenkins.version>2.89</jenkins.version>
         <java.level>8</java.level>
         <workflow.aggregator.version>2.5</workflow.aggregator.version>
         <httpclient.version>4.5.5-2.1</httpclient.version>
@@ -110,14 +110,21 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.5.v20170502</version>
+            <version>9.4.11.v20180605</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.4.5.v20170502</version>
+            <version>9.4.11.v20180605</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-security</artifactId>
+            <version>9.4.11.v20180605</version>
             <scope>test</scope>
         </dependency>
 
