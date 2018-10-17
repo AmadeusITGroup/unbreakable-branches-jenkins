@@ -1,0 +1,57 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+
+    <server>
+      <id>repo.jenkins-ci.org</id>
+      <configuration>
+        <httpConfiguration>
+          <all>
+            <connectionTimeout>5000</connectionTimeout>
+            <readTimeout>5000</readTimeout>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+
+    <server>
+      <id>central</id>
+      <configuration>
+        <httpConfiguration>
+          <all>
+            <connectionTimeout>5000</connectionTimeout>
+            <readTimeout>5000</readTimeout>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+
+    <server>
+      <id>sonatype</id>
+      <configuration>
+        <httpConfiguration>
+          <all>
+            <connectionTimeout>5000</connectionTimeout>
+            <readTimeout>5000</readTimeout>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+
+    <server>
+      <id>sonatype-apache</id>
+      <configuration>
+        <httpConfiguration>
+          <all>
+            <connectionTimeout>5000</connectionTimeout>
+            <readTimeout>5000</readTimeout>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+
+  </servers>
+</settings>
+
