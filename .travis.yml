@@ -12,6 +12,10 @@ before_install:
 #   - mvn help:effective-pom
 #   - mvn help:effective-settings
 
+# otherwise there is a
+# [ERROR] java.nio.file.NoSuchFileException: /home/travis/build/AmadeusITGroup/unbreakable-branches-jenkins/target/classes/META-INF/annotations/hudson.Extension
+jdk:
+  - openjdk8
 
 # code coverage
 after_success:
