@@ -70,7 +70,7 @@
         <httpclient.version>4.5.5-2.1</httpclient.version>
         <mockito.all.version>1.10.19</mockito.all.version>
         <artifactory-maven-plugin.version>2.6.1</artifactory-maven-plugin.version>
-        <git-plugin.version>3.5.0</git-plugin.version>
+        <git-plugin.version>4.11.2</git-plugin.version>
         <no-test-jar>false</no-test-jar>
     </properties>
 
