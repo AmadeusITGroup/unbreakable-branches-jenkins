@@ -1,10 +1,8 @@
 package com.amadeus.jenkins.plugins.unbreakablebuild;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.model.Failure;
-import hudson.model.Run;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,15 +11,18 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.model.Failure;
+import hudson.model.Run;
 
 public class UbJenkinsEnvBeanTest {
 
     /* CONSTANTS */
     private static final String USER = "git-user";
     private static final String PASSWORD = "git-secret";
-
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(options().dynamicPort());
@@ -48,7 +49,6 @@ public class UbJenkinsEnvBeanTest {
                 + "/UB%2Ftarget%2FbranchName%2FPR%2F12%2Ftry%2F1");
     }
 
-
     private static void checkNotificationReceived(UbJenkinsEnvBean.Status status) {
         MockBitbucketHelper.checkNotificationReceived(status, USER, PASSWORD);
     }
@@ -58,7 +58,6 @@ public class UbJenkinsEnvBeanTest {
         // it will fail because environment setup is missing
         new UbJenkinsEnvBean(envVars, run);
     }
-
 
     @Test
     public void constructorOk() {
@@ -143,7 +142,7 @@ public class UbJenkinsEnvBeanTest {
                 .isThrownBy(() -> ubJenkinsEnvBean.notifyBitbucket(status, null, credentials, run))
                 .withMessage("The notification to bitbucket went wrong, build marked as failed. Status code: 400, "
                         + "message: { \"message\":  }, exception: org.json.JSONException: "
-                        + "Missing value at character 14");
+                        + "Missing value at 14 [character 15 line 1]");
     }
 
     @Test
@@ -168,8 +167,8 @@ public class UbJenkinsEnvBeanTest {
         UbJenkinsEnvBean ubJenkinsEnvBean = newBean();
 
         assertThatExceptionOfType(AbortException.class)
-                .isThrownBy(() ->
-                        ubJenkinsEnvBean.notifyBitbucket(UbJenkinsEnvBean.Status.SUCCESS, null, credentials, run))
+                .isThrownBy(
+                        () -> ubJenkinsEnvBean.notifyBitbucket(UbJenkinsEnvBean.Status.SUCCESS, null, credentials, run))
                 .withMessage(
                         "Unbreakable build actions should only be called from Unbreakable "
                                 + "Build branches (name should match: 'refs/ubuilds/(?<mergeRequestId>[0-9]+)'. "
