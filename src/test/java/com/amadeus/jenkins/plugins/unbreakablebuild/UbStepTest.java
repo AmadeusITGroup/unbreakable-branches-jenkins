@@ -1,11 +1,37 @@
 package com.amadeus.jenkins.plugins.unbreakablebuild;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.jvnet.hudson.test.BuildWatcher;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.TestExtension;
+
+import com.amadeus.jenkins.plugins.unbreakablebuild.UbJenkinsEnvBean.EnvVarName;
 import com.cloudbees.plugins.credentials.CredentialsScope;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
 import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.Domain;
 import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import hudson.EnvVars;
 import hudson.model.EnvironmentContributor;
 import hudson.model.Result;
@@ -21,25 +47,6 @@ import jenkins.plugins.git.traits.RemoteNameSCMSourceTrait;
 import jenkins.scm.api.SCMSource;
 import jenkins.scm.api.trait.SCMSourceTrait;
 import jenkins.scm.impl.trait.WildcardSCMHeadFilterTrait;
-import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
-import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
-import org.jvnet.hudson.test.BuildWatcher;
-import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.TestExtension;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-import static com.amadeus.jenkins.plugins.unbreakablebuild.UbJenkinsEnvBean.EnvVarName;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class UbStepTest {
@@ -155,7 +162,7 @@ public class UbStepTest {
     public void testComplainIfNoCreds() throws Exception {
         // Credentials not added --> should fail
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm; ubValidate()}");
+        createSampleGitRepo("ubValidate()");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -174,7 +181,7 @@ public class UbStepTest {
     public void testComplainIfNoEnvionmentVariables() throws Exception {
         addCredz();
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm; ubValidate()}");
+        createSampleGitRepo("ubValidate()");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -223,7 +230,8 @@ public class UbStepTest {
     public void unbreakableBuildPassed() throws Exception {
         addCredz();
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm; ubValidate()}");
+
+        createSampleGitRepo("ubValidate()");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -263,7 +271,7 @@ public class UbStepTest {
     public void unbreakableBuildFailed() throws Exception {
         addCredz();
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm; ubFail()}");
+        createSampleGitRepo("ubFail()");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -300,7 +308,7 @@ public class UbStepTest {
     public void unbreakableBuildListenerCallsUbValidate() throws Exception {
         addCredz();
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm}");
+        createSampleGitRepo("def iSay = 'hi'");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -337,7 +345,7 @@ public class UbStepTest {
     public void unbreakableBuildListenerCallsUbFail() throws Exception {
         addCredz();
         WorkflowMultiBranchProject mp = createMultiBranchProject();
-        createSampleGitRepo(" node {checkout scm; fail}");
+        createSampleGitRepo("fail");
         attachSampleRepoToProject(mp);
 
         WorkflowJob p = scheduleAndFindBranchProject(mp, "master");
@@ -366,7 +374,6 @@ public class UbStepTest {
      * on the a patched Bitbucket Branch Source Plugin.
      * The plugin adds environments variables to the build.
      */
-
     @TestExtension({
             "unbreakableBuildFailed",
             "unbreakableBuildPassed",

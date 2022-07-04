@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.25</version>
+        <version>4.41</version>
         <relativePath/>
     </parent>
 
     <groupId>com.amadeus.jenkins.plugins</groupId>
     <artifactId>unbreakable-branches-jenkins</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
+
+    <url>https://github.com/AmadeusITGroup/${project.artifactId}</url>
 
     <name>Unbreakable Branches Jenkins Plugin</name>
 
@@ -64,95 +65,87 @@
 
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.89</jenkins.version>
-        <java.level>8</java.level>
-        <workflow.aggregator.version>2.5</workflow.aggregator.version>
-        <httpclient.version>4.5.5-2.1</httpclient.version>
-        <mockito.all.version>1.10.19</mockito.all.version>
-        <artifactory-maven-plugin.version>2.6.1</artifactory-maven-plugin.version>
-        <git-plugin.version>3.5.0</git-plugin.version>
+        <jenkins.version>2.319.3</jenkins.version>
         <no-test-jar>false</no-test-jar>
+        <gitHubRepo>AmadeusITGroup/${project.artifactId}</gitHubRepo>
     </properties>
 
+    <!-- This is awesome... it automatically computes a working list of versions !!! -->
+    <!-- https://github.com/jenkinsci/bom/blob/master/README.md -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-2.319.x</artifactId>
+                <!-- Latest version goes here -->
+                <version>1466.v85a_616ea_b_87c</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
     <dependencies>
-        <!-- needed as we depend on the DISPLAYED_URL env var -->
+        <!-- needed as we depend on the JOB_DISPLAY_URL env var -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>display-url-api</artifactId>
-            <version>2.2.0</version>
         </dependency>
 
-        <!-- mandatory -->
+        <!-- https://plugins.jenkins.io/workflow-step-api/ -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-aggregator</artifactId>
-            <version>${workflow.aggregator.version}</version>
+            <artifactId>workflow-multibranch</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>credentials</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jenkins-ci.plugins/apache-httpcomponents-client-4-api -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>apache-httpcomponents-client-4-api</artifactId>
-            <version>${httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
         </dependency>
 
         <!-- Nice assertions for the testing -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.11.0</version>
+            <version>3.23.1</version>
             <scope>test</scope>
         </dependency>
-
 
         <!--Fix deps issue before importing the nice http mocking..... -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>9.4.41.v20210516</version>
-            <scope>test</scope>
-        </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>9.4.34.v20201102</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-security</artifactId>
-            <version>9.4.34.v20201102</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>5.0.4</version>
-            <scope>test</scope>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version>
         </dependency>
         <!-- end deps issues-->
 
         <!-- Mocking HTTP nicely -->
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>2.18.0</version>
+            <artifactId>wiremock-jre8</artifactId>
+            <version>2.33.2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.21.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.6.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -160,97 +153,34 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>${git-plugin.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
 
         <!-- AND IMPORTANT TO GET THE DEPS OF THE GIT SAMPLE REPO-->
+        <!-- https://github.com/jenkinsci/workflow-multibranch-plugin/blob/master/pom.xml -->
+        <!-- https://github.com/jenkinsci/workflow-multibranch-plugin/blob/master/src/test/java/org/jenkinsci/plugins/workflow/multibranch/WorkflowMultiBranchProjectTest.java#L55 -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>scm-api</artifactId>
-            <version>2.2.0</version>
             <classifier>tests</classifier>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>event-announcer</artifactId>
-            <version>1.0.4</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci</groupId>
-            <artifactId>annotation-indexer</artifactId>
-            <version>1.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>junit</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>${git-plugin.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Artifactory Deployment Configuration -->
-            <plugin>
-                <groupId>org.jfrog.buildinfo</groupId>
-                <artifactId>artifactory-maven-plugin</artifactId>
-                <version>${artifactory-maven-plugin.version}</version>
-                <inherited>true</inherited>
-                <executions>
-                    <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>publish</goal>
-                        </goals>
-                        <configuration>
-                            <publisher>
-                                <contextUrl>{{ARTIFACTORY_URL}}</contextUrl>
-                                <username>{{AR_USERNAME}}</username>
-                                <password>{{AR_PASSWORD}}</password>
-                                <repoKey>maven-release</repoKey>
-                                <snapshotRepoKey>maven-snapshot</snapshotRepoKey>
-                            </publisher>
-                            <artifactory>
-                                <includeEnvVars>true</includeEnvVars>
-                                <envVarsExcludePatterns>AR_PASSWORD</envVarsExcludePatterns>
-                                <timeoutSec>60</timeoutSec>
-                                <propertiesFile>publish.properties</propertiesFile>
-                            </artifactory>
-                            <buildInfo>
-                                <buildName>${project.groupId}.${project.artifactId}</buildName>
-                                <buildNumber>${project.version}</buildNumber>
-                                <buildUrl>{{BUILD_URL}}</buildUrl>
-                            </buildInfo>
-                            <licenses>
-                                <autoDiscover>true</autoDiscover>
-                                <includePublishedArtifacts>false</includePublishedArtifacts>
-                                <runChecks>true</runChecks>
-                                <scopes>compile,runtime</scopes>
-                            </licenses>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.9</version>
+                <version>0.8.8</version>
                 <executions>
                     <execution>
                         <goals>

@@ -51,3 +51,13 @@ in the tests)
 - The Bitbucket you are running against should have the UnbreakableBranch plugin installed.
 - The bitbucketBranch source plugin (Jenkins plugin) should be a patched so that
  mandatory environment variables are injected. Note that this plugin hasn't been released yet.
+
+## Update the dependencies
+
+```shell
+# https://www.jenkins.io/doc/developer/plugin-development/dependency-management/
+mvn versions:update-parent
+mvn clean verify
+
+```
+
