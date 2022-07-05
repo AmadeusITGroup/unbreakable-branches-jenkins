@@ -58,6 +58,10 @@ in the tests)
 # https://www.jenkins.io/doc/developer/plugin-development/dependency-management/
 mvn versions:update-parent
 mvn clean verify
-
 ```
 
+### Find unused dependencies
+
+```shell
+mvn dependency:analyze
+```

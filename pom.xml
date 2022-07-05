@@ -87,12 +87,6 @@
 
 
     <dependencies>
-        <!-- needed as we depend on the JOB_DISPLAY_URL env var -->
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>display-url-api</artifactId>
-        </dependency>
-
         <!-- https://plugins.jenkins.io/workflow-step-api/ -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
